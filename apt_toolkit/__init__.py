@@ -9,7 +9,7 @@ This toolkit is intended for authorized penetration testing, security research, 
 Unauthorized use is illegal and unethical. Always obtain proper permissions before use.
 """
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"
 __author__ = "Security Research Team"
 
 # Core modules
@@ -36,6 +36,13 @@ from .exploit_intel import (
     module_recommendations,
 )
 from .offensive_playbooks import generate_offensive_playbook
+
+# Chinese APT Campaign modules
+from .chinese_apt_campaign import (
+    AdvancedTargetingEngine,
+    CampaignOrchestrator,
+    SystemExploitationEngine
+)
 
 __all__ = [
     # Core modules
@@ -81,6 +88,11 @@ __all__ = [
     "enrich_with_exploit_intel",
     "module_recommendations",
     "generate_offensive_playbook",
+
+    # Chinese APT Campaign modules
+    "AdvancedTargetingEngine",
+    "CampaignOrchestrator", 
+    "SystemExploitationEngine"
 ]
 
 # Security controls and safety measures

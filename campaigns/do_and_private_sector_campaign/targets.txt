@@ -1,0 +1,2 @@
+target1@example.com
+target2@example.com

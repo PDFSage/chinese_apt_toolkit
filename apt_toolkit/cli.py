@@ -5,9 +5,10 @@ Command Line Interface for APT Toolkit
 import argparse
 import json
 import sys
-from typing import List
+from .american_targets_enhanced import analyze_american_targets_enhanced
 
 from .american_targets import analyze_american_targets
+from .american_targets_enhanced import analyze_american_targets_enhanced
 from .campaign import APTCampaignSimulator, CampaignConfig
 
 # Chinese APT campaign imports
@@ -180,8 +181,8 @@ Examples:
     )
     american_parser.add_argument(
         "action",
-        choices=["targets"],
-        help="Run american targets reconnaissance",
+        choices=["targets", "targets-enhanced"],
+        help="Run american targets reconnaissance (basic or enhanced)",
     )
 
     # Chinese APT campaigns subparser
@@ -407,6 +408,8 @@ def handle_command(args) -> dict:
     elif args.module == "american":
         if getattr(args, "action", None) == "targets":
             return {"american_targets": analyze_american_targets()}
+        elif getattr(args, "action", None) == "targets-enhanced":
+            return {"american_targets_enhanced": analyze_american_targets_enhanced()}
 
     return {"error": "No valid command specified"}
 

@@ -9,6 +9,15 @@ from typing import List
 
 from .american_targets import analyze_american_targets
 from .campaign import APTCampaignSimulator, CampaignConfig
+
+# Chinese APT campaign imports
+try:
+    from campaigns.chinese_apts.chinese_apt_orchestrator import (
+        ChineseAPTCampaignOrchestrator, ChineseAPTCampaignConfig
+    )
+    CHINESE_APT_SUPPORT = True
+except ImportError:
+    CHINESE_APT_SUPPORT = False
 from .exploit_intel import ExploitDBIndex, ExploitDBNotAvailableError
 from .offensive_playbooks import generate_offensive_playbook
 from .initial_access import (
@@ -175,8 +184,36 @@ Examples:
         help="Run american targets reconnaissance",
     )
 
+    # Chinese APT campaigns subparser
+    if CHINESE_APT_SUPPORT:
+        chinese_parser = subparsers.add_parser(
+            "chinese-apt",
+            help="Chinese APT campaign simulations (APT41, APT1, APT10, APT12)",
+        )
+        chinese_parser.add_argument(
+            "--campaign",
+            choices=[
+                "apt41_gaming", "apt41_supply_chain",
+                "apt1_government", "apt1_long_term",
+                "apt10_msp", "apt10_cloud",
+                "apt12_diplomatic", "apt12_strategic",
+                "comparative"
+            ],
+            help="Specific Chinese APT campaign type to simulate",
+        )
+        chinese_parser.add_argument(
+            "--domain",
+            default="secure.dod.mil",
+            help="Target domain for campaign simulation",
+        )
+        chinese_parser.add_argument(
+            "--seed",
+            type=int,
+            help="Seed random number generation for deterministic output",
+        )
+
     # Common arguments
-    for subparser in [
+    subparser_list = [
         ia_parser,
         per_parser,
         pe_parser,
@@ -187,7 +224,12 @@ Examples:
         campaign_parser,
         exploit_parser,
         american_parser,
-    ]:
+    ]
+    
+    if CHINESE_APT_SUPPORT:
+        subparser_list.append(chinese_parser)
+    
+    for subparser in subparser_list:
         subparser.add_argument("--json", action="store_true", help="Output as JSON")
     
     args = parser.parse_args()
@@ -295,6 +337,28 @@ def handle_command(args) -> dict:
         )
         simulator = APTCampaignSimulator(seed=args.seed)
         return {"campaign_report": simulator.simulate(config)}
+
+    elif args.module == "chinese-apt" and CHINESE_APT_SUPPORT:
+        if not args.campaign:
+            orchestrator = ChineseAPTCampaignOrchestrator(seed=args.seed)
+            return {
+                "available_campaigns": orchestrator.get_available_campaign_types(),
+                "chinese_apt_overview": orchestrator._get_chinese_apt_overview()
+            }
+        
+        config = ChineseAPTCampaignConfig(
+            target_domain=args.domain,
+            seed=args.seed
+        )
+        orchestrator = ChineseAPTCampaignOrchestrator(seed=args.seed)
+        
+        if args.campaign == "comparative":
+            return orchestrator.run_comparative_analysis(config)
+        else:
+            return orchestrator.simulate_specific_campaign_type(args.campaign, config)
+
+    elif args.module == "chinese-apt" and not CHINESE_APT_SUPPORT:
+        return {"error": "Chinese APT campaign support not available"}
 
     elif args.module == "exploitdb":
         try:
