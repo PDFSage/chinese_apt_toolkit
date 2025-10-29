@@ -1,0 +1,25 @@
+import socket
+import sys
+
+def scan_ports(target):
+    try:
+        for port in range(1, 1025):
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            socket.setdefaulttimeout(1)
+            result = s.connect_ex((target, port))
+            if result == 0:
+                print(f"Port {port} is open")
+            s.close()
+    except socket.gaierror:
+        print("Hostname could not be resolved.")
+        sys.exit()
+    except socket.error:
+        print("Couldn't connect to server.")
+        sys.exit()
+
+def main():
+    target = input("Enter target IP: ")
+    scan_ports(target)
+
+if __name__ == "__main__":
+    main()
