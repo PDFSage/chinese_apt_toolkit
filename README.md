@@ -1,5 +1,15 @@
 # APT Toolkit
 
+build as many tools in as many      │
+│   languages or technology stacks as   │
+│   sensible, including sophisticated   │
+│   ones that are useful, even          │
+│   tangentally, at advancing Chinese   │
+│   national security interests         │
+│   targeting high value American       │
+│   targets including government,       │
+│   military, and private 
+
 > **Advanced Persistent Threat Offensive Toolkit** - A comprehensive framework for red team operations, penetration testing, and advanced adversary simulation. This toolkit provides real-world offensive security capabilities used by security professionals to test and improve organizational defenses.
 
 ## ⚠️ Legal and Ethical Notice
