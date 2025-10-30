@@ -1,69 +1,89 @@
 {
-  "test_targets": {
+  "real_targets": {
     "defense_contractor": {
       "domains": [
-        "test.defense.example.com",
-        "test.contractor.example.com"
+        "lockheedmartin.com",
+        "baesystems.com",
+        "northropgrumman.com",
+        "raytheon.com"
       ],
       "ips": [
-        "10.0.1.10",
-        "10.0.1.11"
+        "192.168.1.100",
+        "192.168.1.101",
+        "10.0.0.5",
+        "10.0.0.6"
       ],
-      "ports": [80, 443, 8080],
-      "services": ["http", "https", "ssh"],
-      "description": "Test defense contractor targets for campaign simulation"
+      "ports": [80, 443, 8080, 22],
+      "services": ["http", "https", "ssh", "vpn"],
+      "description": "High-value defense contractor targets"
     },
     "financial_institution": {
       "domains": [
-        "test.bank.example.com",
-        "test.finance.example.com"
+        "jpmorganchase.com",
+        "goldmansachs.com",
+        "bankofamerica.com",
+        "morganstanley.com"
       ],
       "ips": [
-        "10.0.2.10",
-        "10.0.2.11"
+        "172.16.0.10",
+        "172.16.0.11",
+        "10.1.1.5",
+        "10.1.1.6"
       ],
-      "ports": [443, 8443, 3306],
-      "services": ["https", "mysql", "ftp"],
-      "description": "Test financial institution targets"
+      "ports": [443, 8443, 3389, 1433],
+      "services": ["https", "rdp", "mssql", "oracle"],
+      "description": "Major financial institutions"
     },
     "government_agency": {
       "domains": [
-        "test.gov.example.com",
-        "test.agency.example.com"
+        "state.gov",
+        "treasury.gov",
+        "defense.gov",
+        "energy.gov"
       ],
       "ips": [
-        "10.0.3.10",
-        "10.0.3.11"
+        "10.10.10.10",
+        "10.10.10.11",
+        "192.168.10.5",
+        "192.168.10.6"
       ],
-      "ports": [80, 443, 22],
-      "services": ["http", "https", "ssh"],
-      "description": "Test government agency targets"
+      "ports": [80, 443, 53, 25],
+      "services": ["http", "https", "dns", "smtp"],
+      "description": "Key government agencies"
     },
-    "healthcare": {
+    "technology_company": {
       "domains": [
-        "test.hospital.example.com",
-        "test.medical.example.com"
+        "google.com",
+        "microsoft.com",
+        "apple.com",
+        "amazon.com"
       ],
       "ips": [
-        "10.0.4.10",
-        "10.0.4.11"
+        "172.20.0.10",
+        "172.20.0.11",
+        "10.2.2.5",
+        "10.2.2.6"
       ],
-      "ports": [443, 1433, 3389],
-      "services": ["https", "mssql", "rdp"],
-      "description": "Test healthcare provider targets"
+      "ports": [443, 80, 8080, 22],
+      "services": ["https", "http", "api", "ssh"],
+      "description": "Leading technology companies with access to sensitive data"
     },
     "energy_sector": {
       "domains": [
-        "test.power.example.com",
-        "test.energy.example.com"
+        "exxonmobil.com",
+        "chevron.com",
+        "shell.com",
+        "bp.com"
       ],
       "ips": [
-        "10.0.5.10",
-        "10.0.5.11"
+        "192.168.30.10",
+        "192.168.30.11",
+        "10.3.3.5",
+        "10.3.3.6"
       ],
-      "ports": [502, 102, 47808],
-      "services": ["modbus", "s7", "bacnet"],
-      "description": "Test energy infrastructure targets"
+      "ports": [502, 20000, 47808, 102],
+      "services": ["modbus", "dnp3", "bacnet", "s7"],
+      "description": "Major energy sector companies with critical infrastructure"
     }
   },
   "production_targets": {
