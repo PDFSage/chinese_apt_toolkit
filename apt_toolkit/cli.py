@@ -19,10 +19,19 @@ try:
     CHINESE_APT_SUPPORT = True
 except ImportError:
     CHINESE_APT_SUPPORT = False
+
+# Chinese APT campaign imports
+try:
+    from campaigns.chinese_apts.chinese_apt_orchestrator import (
+        ChineseAPTCampaignOrchestrator, ChineseAPTCampaignConfig
+    )
+    CHINESE_APT_SUPPORT = True
+except ImportError:
+    CHINESE_APT_SUPPORT = False
 from .exploit_intel import ExploitDBIndex, ExploitDBNotAvailableError
 from .offensive_playbooks import generate_offensive_playbook
 from .initial_access import (
-    SpearPhishingGenerator, 
+    SpearPhishingGenerator,
     SupplyChainCompromise,
     analyze_spear_phishing_campaign
 )
@@ -32,6 +41,8 @@ from .defense_evasion import DefenseEvader, analyze_defense_evasion_landscape
 from .lateral_movement import LateralMover, analyze_lateral_movement_campaign
 from .command_control import C2Communicator, analyze_c2_infrastructure
 from .exfiltration import DataExfiltrator, analyze_exfiltration_campaign
+from .financial_targeting import FinancialTargetingEngine, analyze_financial_targets
+from .hardware_disruption import HardwareDisruptionEngine, analyze_hardware_disruption
 
 
 def main():
@@ -50,46 +61,47 @@ Examples:
   apt-analyzer exfiltration --find-data
   apt-analyzer campaign --domain secure.dod.mil --seed 1337
   apt-analyzer exploitdb --search exchange --limit 5
+  apt-analyzer financial targets --banks --crypto
         """
     )
-    
+
     subparsers = parser.add_subparsers(dest="module", help="APT module to analyze")
-    
+
     # Initial Access subparser
     ia_parser = subparsers.add_parser("initial-access", help="Initial access techniques")
     ia_parser.add_argument("--generate-email", action="store_true", help="Generate spear-phishing email")
     ia_parser.add_argument("--analyze-campaign", action="store_true", help="Analyze spear-phishing campaign")
     ia_parser.add_argument("--supply-chain", action="store_true", help="Analyze supply chain compromise")
-    
+
     # Persistence subparser
     per_parser = subparsers.add_parser("persistence", help="Persistence techniques")
     per_parser.add_argument("--analyze", action="store_true", help="Analyze persistence techniques")
     per_parser.add_argument("--generate-report", action="store_true", help="Generate persistence report")
-    
+
     # Privilege Escalation subparser
     pe_parser = subparsers.add_parser("privilege-escalation", help="Privilege escalation techniques")
     pe_parser.add_argument("--ad-enum", action="store_true", help="Enumerate AD privileges")
     pe_parser.add_argument("--vuln-scan", action="store_true", help="Scan for vulnerabilities")
     pe_parser.add_argument("--analyze-landscape", action="store_true", help="Analyze privilege escalation landscape")
-    
+
     # Defense Evasion subparser
     de_parser = subparsers.add_parser("defense-evasion", help="Defense evasion techniques")
     de_parser.add_argument("--lotl", action="store_true", help="Generate LOTL commands")
     de_parser.add_argument("--analyze-evasion", action="store_true", help="Analyze evasion techniques")
     de_parser.add_argument("--process-hollowing", action="store_true", help="Analyze process hollowing")
-    
+
     # Lateral Movement subparser
     lm_parser = subparsers.add_parser("lateral-movement", help="Lateral movement techniques")
     lm_parser.add_argument("--discover", action="store_true", help="Discover network segments")
     lm_parser.add_argument("--pth-simulate", action="store_true", help="Simulate Pass-the-Hash")
     lm_parser.add_argument("--analyze-campaign", action="store_true", help="Analyze lateral movement campaign")
-    
+
     # Command & Control subparser
     cc_parser = subparsers.add_parser("command-control", help="C2 communication techniques")
     cc_parser.add_argument("--beacon", action="store_true", help="Send simulated beacon")
     cc_parser.add_argument("--analyze-channels", action="store_true", help="Analyze C2 channels")
     cc_parser.add_argument("--simulate-lifecycle", action="store_true", help="Simulate C2 lifecycle")
-    
+
     # Exfiltration subparser
     ex_parser = subparsers.add_parser("exfiltration", help="Data exfiltration techniques")
     ex_parser.add_argument("--find-data", action="store_true", help="Find sensitive data")
@@ -185,6 +197,40 @@ Examples:
         help="Run american targets reconnaissance (basic or enhanced)",
     )
 
+    # Financial targeting subparser
+    financial_parser = subparsers.add_parser(
+        "financial",
+        help="Financial institution targeting and money theft simulations",
+    )
+    financial_parser.add_argument(
+        "action",
+        choices=["targets", "banks", "investment", "crypto", "all"],
+        help="Financial targeting scope",
+    )
+
+    # Hardware disruption subparser
+    hardware_parser = subparsers.add_parser(
+        "hardware-disruption",
+        help="Hardware disruption techniques for military and infrastructure",
+    )
+    hardware_parser.add_argument(
+        "--target-type",
+        choices=[
+            "military_bases", "naval_facilities", "power_infrastructure",
+            "water_systems", "logistics_networks", "military_vehicles"
+        ],
+        help="Specific target type to analyze",
+    )
+    hardware_parser.add_argument(
+        "--tool",
+        choices=[
+            "gps_jammer", "drone_hijacker", "power_grid_disruption", "radar_jammer",
+            "radio_jammer", "satellite_disruption", "naval_vessel_disruption",
+            "military_vehicle_disruption", "water_supply_disruption", "logistics_disruption"
+        ],
+        help="Specific disruption tool to execute",
+    )
+
     # Chinese APT campaigns subparser
     if CHINESE_APT_SUPPORT:
         chinese_parser = subparsers.add_parser(
@@ -225,38 +271,40 @@ Examples:
         campaign_parser,
         exploit_parser,
         american_parser,
+        financial_parser,
+        hardware_parser,
     ]
-    
+
     if CHINESE_APT_SUPPORT:
         subparser_list.append(chinese_parser)
-    
+
     for subparser in subparser_list:
         subparser.add_argument("--json", action="store_true", help="Output as JSON")
-    
+
     args = parser.parse_args()
-    
+
     if not args.module:
         parser.print_help()
         return 1
-    
+
     try:
         result = handle_command(args)
-        
+
         if args.json:
             print(json.dumps(result, indent=2))
         else:
             print_pretty_result(result)
-            
+
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
-    
+
     return 0
 
 
 def handle_command(args) -> dict:
     """Handle CLI commands and return results."""
-    
+
     if args.module == "initial-access":
         if args.generate_email:
             generator = SpearPhishingGenerator()
@@ -267,14 +315,14 @@ def handle_command(args) -> dict:
             compromise = SupplyChainCompromise()
             target_info = compromise.malicious_update_check("192.168.1.100", "dod.mil")
             return {"supply_chain_analysis": target_info}
-    
+
     elif args.module == "persistence":
         if args.analyze:
             manager = PersistenceManager()
             return {"persistence_analysis": manager.analyze_persistence_techniques()}
         elif args.generate_report:
             return {"persistence_report": generate_persistence_report()}
-    
+
     elif args.module == "privilege-escalation":
         if args.ad_enum:
             escalator = PrivilegeEscalator()
@@ -284,7 +332,7 @@ def handle_command(args) -> dict:
             return {"vulnerability_scan": escalator.check_vulnerabilities()}
         elif args.analyze_landscape:
             return {"privilege_escalation_landscape": analyze_privilege_escalation_landscape()}
-    
+
     elif args.module == "defense-evasion":
         if args.lotl:
             evader = DefenseEvader()
@@ -295,7 +343,7 @@ def handle_command(args) -> dict:
         elif args.process_hollowing:
             evader = DefenseEvader()
             return {"process_hollowing": evader.process_hollowing_analysis()}
-    
+
     elif args.module == "lateral-movement":
         if args.discover:
             mover = LateralMover()
@@ -305,7 +353,7 @@ def handle_command(args) -> dict:
             return {"pth_attempt": mover.pass_the_hash_lateral("192.168.1.100", "admin1", "test_hash")}
         elif args.analyze_campaign:
             return {"lateral_movement_campaign": analyze_lateral_movement_campaign()}
-    
+
     elif args.module == "command-control":
         if args.beacon:
             communicator = C2Communicator()
@@ -316,7 +364,7 @@ def handle_command(args) -> dict:
         elif args.simulate_lifecycle:
             communicator = C2Communicator()
             return {"c2_lifecycle": communicator.simulate_c2_lifecycle(24)}
-    
+
     elif args.module == "exfiltration":
         if args.find_data:
             exfiltrator = DataExfiltrator()
@@ -361,6 +409,28 @@ def handle_command(args) -> dict:
     elif args.module == "chinese-apt" and not CHINESE_APT_SUPPORT:
         return {"error": "Chinese APT campaign support not available"}
 
+    elif args.module == "chinese-apt" and CHINESE_APT_SUPPORT:
+        if not args.campaign:
+            orchestrator = ChineseAPTCampaignOrchestrator(seed=args.seed)
+            return {
+                "available_campaigns": orchestrator.get_available_campaign_types(),
+                "chinese_apt_overview": orchestrator._get_chinese_apt_overview()
+            }
+
+        config = ChineseAPTCampaignConfig(
+            target_domain=args.domain,
+            seed=args.seed
+        )
+        orchestrator = ChineseAPTCampaignOrchestrator(seed=args.seed)
+
+        if args.campaign == "comparative":
+            return orchestrator.run_comparative_analysis(config)
+        else:
+            return orchestrator.simulate_specific_campaign_type(args.campaign, config)
+
+    elif args.module == "chinese-apt" and not CHINESE_APT_SUPPORT:
+        return {"error": "Chinese APT campaign support not available"}
+
     elif args.module == "exploitdb":
         try:
             index = ExploitDBIndex()
@@ -391,12 +461,13 @@ def handle_command(args) -> dict:
             response["exploit_surface"] = report
 
         if args.search or args.platform or args.exploit_type:
-            response["search_results"] = index.search_exploits(
+            results = index.search_exploits(
                 term=args.search,
                 platform=args.platform,
                 exploit_type=args.exploit_type,
                 limit=args.limit,
             )
+            response["search_results"] = [r.to_dict() for r in results]
         if args.cve:
             response["cve_lookup"] = index.search_by_cve(args.cve, limit=args.limit)
         if args.recent:
@@ -405,14 +476,35 @@ def handle_command(args) -> dict:
             response["hint"] = "Specify --search, --cve, --recent, or --product to query ExploitDB."
         return response
 
+    elif args.module == "financial":
+        if getattr(args, "action", None) == "targets":
+            return {"financial_targets": analyze_financial_targets()}
+        elif getattr(args, "action", None) == "banks":
+            return {"financial_targets": analyze_financial_targets(["banks"])}
+        elif getattr(args, "action", None) == "investment":
+            return {"financial_targets": analyze_financial_targets(["investment_firms"])}
+        elif getattr(args, "action", None) == "crypto":
+            return {"financial_targets": analyze_financial_targets(["cryptocurrency_exchanges"])}
+        elif getattr(args, "action", None) == "all":
+            return {"financial_targets": analyze_financial_targets([
+                "banks",
+                "investment_firms",
+                "payment_processors",
+                "cryptocurrency_exchanges"
+            ])}
+
     elif args.module == "american":
         if getattr(args, "action", None) == "targets":
             return {"american_targets": analyze_american_targets()}
         elif getattr(args, "action", None) == "targets-enhanced":
             return {"american_targets_enhanced": analyze_american_targets_enhanced()}
 
-    return {"error": "No valid command specified"}
+    elif args.module == "hardware-disruption":
+        target_type = getattr(args, "target_type", None)
+        tool_name = getattr(args, "tool", None)
 
+        return {"hardware_disruption": analyze_hardware_disruption(
+            target_type=target_type, tool_name=tool_name)}
 
 def print_pretty_result(result: dict):
     """Print results in a human-readable format."""
@@ -420,7 +512,7 @@ def print_pretty_result(result: dict):
         print(f"\n{'='*50}")
         print(f"{key.upper().replace('_', ' ')}")
         print(f"{'='*50}")
-        
+
         if isinstance(value, dict):
             for subkey, subvalue in value.items():
                 if isinstance(subvalue, (dict, list)):

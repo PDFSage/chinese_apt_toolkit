@@ -1,0 +1,74 @@
+{
+  "test_targets": {
+    "defense_contractor": {
+      "domains": [
+        "test.defense.example.com",
+        "test.contractor.example.com"
+      ],
+      "ips": [
+        "10.0.1.10",
+        "10.0.1.11"
+      ],
+      "ports": [80, 443, 8080],
+      "services": ["http", "https", "ssh"],
+      "description": "Test defense contractor targets for campaign simulation"
+    },
+    "financial_institution": {
+      "domains": [
+        "test.bank.example.com",
+        "test.finance.example.com"
+      ],
+      "ips": [
+        "10.0.2.10",
+        "10.0.2.11"
+      ],
+      "ports": [443, 8443, 3306],
+      "services": ["https", "mysql", "ftp"],
+      "description": "Test financial institution targets"
+    },
+    "government_agency": {
+      "domains": [
+        "test.gov.example.com",
+        "test.agency.example.com"
+      ],
+      "ips": [
+        "10.0.3.10",
+        "10.0.3.11"
+      ],
+      "ports": [80, 443, 22],
+      "services": ["http", "https", "ssh"],
+      "description": "Test government agency targets"
+    },
+    "healthcare": {
+      "domains": [
+        "test.hospital.example.com",
+        "test.medical.example.com"
+      ],
+      "ips": [
+        "10.0.4.10",
+        "10.0.4.11"
+      ],
+      "ports": [443, 1433, 3389],
+      "services": ["https", "mssql", "rdp"],
+      "description": "Test healthcare provider targets"
+    },
+    "energy_sector": {
+      "domains": [
+        "test.power.example.com",
+        "test.energy.example.com"
+      ],
+      "ips": [
+        "10.0.5.10",
+        "10.0.5.11"
+      ],
+      "ports": [502, 102, 47808],
+      "services": ["modbus", "s7", "bacnet"],
+      "description": "Test energy infrastructure targets"
+    }
+  },
+  "production_targets": {
+    "note": "Production targets should be configured with proper authorization and scope",
+    "enabled": false,
+    "targets": []
+  }
+}

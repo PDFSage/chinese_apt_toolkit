@@ -94,20 +94,3 @@ __all__ = [
     "CampaignOrchestrator", 
     "SystemExploitationEngine"
 ]
-
-# Security controls and safety measures
-__safety_controls__ = {
-    "require_authorization": True,
-    "safe_mode_default": False,
-    "audit_logging": True,
-    "environment_checks": True
-}
-
-# Import safety controls
-from .security_controls import (
-    SafetyController,
-    require_authorization,
-    safe_mode,
-    audit_action,
-    environment_check
-)

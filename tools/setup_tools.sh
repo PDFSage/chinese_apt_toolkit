@@ -115,20 +115,25 @@ check_dependencies() {
 compile_c_tools() {
     echo -e "${BLUE}[*] Compiling C tools...${NC}"
     
-    if command_exists gcc; then
-        if [ -f "apt_memory_injector.c" ]; then
-            echo -e "${YELLOW}[*] Compiling apt_memory_injector...${NC}"
-            gcc -o apt_memory_injector apt_memory_injector.c -lpsapi
-            if [ $? -eq 0 ]; then
-                echo -e "${GREEN}[+] apt_memory_injector compiled successfully${NC}"
+    if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+        cd tools
+        if command_exists gcc; then
+            if [ -f "apt_memory_injector.c" ]; then
+                echo -e "${YELLOW}[*] Compiling apt_memory_injector...${NC}"
+                gcc -o apt_memory_injector apt_memory_injector.c -lpsapi
+                if [ $? -eq 0 ]; then
+                    echo -e "${GREEN}[+] apt_memory_injector compiled successfully${NC}"
+                else
+                    echo -e "${RED}[-] Failed to compile apt_memory_injector${NC}"
+                fi
             else
-                echo -e "${RED}[-] Failed to compile apt_memory_injector${NC}"
+                echo -e "${RED}[-] apt_memory_injector.c not found${NC}"
             fi
         else
-            echo -e "${RED}[-] apt_memory_injector.c not found${NC}"
+            echo -e "${RED}[-] GCC not available, skipping C compilation${NC}"
         fi
     else
-        echo -e "${RED}[-] GCC not available, skipping C compilation${NC}"
+        echo -e "${YELLOW}[*] Skipping C compilation on non-Windows OS${NC}"
     fi
 }
 
@@ -136,6 +141,7 @@ compile_c_tools() {
 compile_go_tools() {
     echo -e "${BLUE}[*] Compiling Go tools...${NC}"
     
+    cd tools
     if command_exists go; then
         if [ -f "apt_network_scanner.go" ]; then
             echo -e "${YELLOW}[*] Compiling apt_network_scanner...${NC}"

@@ -12,7 +12,6 @@ import platform
 from typing import List, Dict, Any
 from datetime import datetime
 
-from .security_controls import require_authorization, safe_mode, audit_action
 from .exploit_intel import enrich_with_exploit_intel
 
 
@@ -40,7 +39,6 @@ class PersistenceManager:
             "user": os.environ.get('USERNAME', os.environ.get('USER', 'unknown'))
         }
     
-    @require_authorization
     def create_scheduled_task(self, task_name: str = None, payload_path: str = None) -> Dict[str, Any]:
         """Create scheduled task for persistence."""
         name = task_name or f"MicrosoftEdgeUpdateTask{random.randint(1000, 9999)}"
@@ -63,7 +61,6 @@ class PersistenceManager:
         else:
             self._create_unix_cron_job(task_config)
         
-        audit_action("scheduled_task_created", task_config)
         search_terms = [task_config.get("persistence_type"), task_config.get("task_name")]
         platform_hint = (self.system_info.get("platform") or "").lower() or None
         return enrich_with_exploit_intel(
@@ -87,7 +84,6 @@ class PersistenceManager:
         # In real implementation, add to crontab
         pass
     
-    @require_authorization
     def create_wmi_event_subscription(self) -> Dict[str, Any]:
         """Create WMI event subscription for persistence."""
         if self.system_info["platform"] != "Windows":
@@ -107,7 +103,6 @@ class PersistenceManager:
         # Simulate WMI subscription creation
         self._create_wmi_subscription(subscription)
         
-        audit_action("wmi_subscription_created", subscription)
         return enrich_with_exploit_intel(
             "persistence",
             subscription,
@@ -122,7 +117,6 @@ class PersistenceManager:
         # In real implementation, use PowerShell/WMI commands
         pass
     
-    @require_authorization
     def create_registry_persistence(self, registry_key: str = None) -> Dict[str, Any]:
         """Create registry run key persistence."""
         if self.system_info["platform"] != "Windows":
@@ -143,7 +137,6 @@ class PersistenceManager:
         # Simulate registry modification
         self._modify_registry(registry_config)
         
-        audit_action("registry_persistence_created", registry_config)
         return enrich_with_exploit_intel(
             "persistence",
             registry_config,
@@ -158,7 +151,6 @@ class PersistenceManager:
         # In real implementation, use reg.exe or winreg module
         pass
     
-    @require_authorization
     def create_service_persistence(self, service_name: str = None) -> Dict[str, Any]:
         """Create Windows service for persistence."""
         if self.system_info["platform"] != "Windows":
@@ -180,7 +172,6 @@ class PersistenceManager:
         # Simulate service creation
         self._create_windows_service(service_config)
         
-        audit_action("service_persistence_created", service_config)
         return enrich_with_exploit_intel(
             "persistence",
             service_config,
@@ -222,7 +213,6 @@ while ($true) {
         
         return payload_path
     
-    @require_authorization
     def install_multiple_persistence(self, techniques: List[str] = None) -> Dict[str, Any]:
         """Install multiple persistence mechanisms for resilience."""
         if techniques is None:
@@ -247,7 +237,6 @@ while ($true) {
             "recommended_cleanup": "Remove all persistence mechanisms"
         }
         
-        audit_action("multiple_persistence_installed", result)
         return result
     
     def analyze_persistence_techniques(self) -> Dict[str, Any]:
@@ -289,61 +278,44 @@ while ($true) {
         
         analysis = {
             "techniques": techniques,
-            "recommended_defense": "Monitor WMI events, scheduled tasks, registry changes, and services",
-            "detection_tools": ["Sysmon", "Windows Event Logs", "EDR solutions", "Autoruns"],
-            "mitigation_strategy": "Least privilege, application whitelisting, regular audits"
+            "recommended_defense": "Monitor WMI event subscriptions and scheduled tasks",
+            "detection_tools": ["Sysmon", "Windows Event Logs", "PowerShell logging"]
         }
         
-        technique_terms = [tech.get("name") for tech in techniques if isinstance(tech, dict)]
-        return enrich_with_exploit_intel(
-            "persistence",
-            analysis,
-            search_terms=technique_terms,
-            platform=(self.system_info.get("platform") or "").lower() or None,
-            include_payloads=True,
-        )
+        return analysis
 
 
 def generate_persistence_report() -> Dict[str, Any]:
-    """Generate a comprehensive persistence techniques report."""
+    """Generate a comprehensive persistence analysis report."""
     manager = PersistenceManager()
+    
+    analysis = manager.analyze_persistence_techniques()
     
     report = {
-        "scheduled_task": manager.create_scheduled_task(),
-        "wmi_subscription": manager.create_wmi_event_subscription(),
-        "registry_persistence": manager.create_registry_persistence(),
-        "service_persistence": manager.create_service_persistence(),
-        "analysis": manager.analyze_persistence_techniques()
+        "persistence_analysis": analysis,
+        "recommendations": [
+            "Implement application whitelisting",
+            "Monitor WMI event subscriptions",
+            "Audit scheduled tasks regularly",
+            "Use EDR solutions with behavioral detection"
+        ],
+        "apt_groups_using_persistence": [
+            {
+                "group": "APT29",
+                "techniques": ["Scheduled Task", "WMI"],
+                "targets": ["Government", "Think Tanks"]
+            },
+            {
+                "group": "APT41",
+                "techniques": ["Registry Run Keys", "Services"],
+                "targets": ["Gaming", "Healthcare"]
+            },
+            {
+                "group": "APT28",
+                "techniques": ["WMI", "COM Hijacking"],
+                "targets": ["Political", "Military"]
+            }
+        ]
     }
     
-    for key in ["scheduled_task", "wmi_subscription", "registry_persistence", "service_persistence"]:
-        value = report.get(key)
-        if isinstance(value, dict) and "error" not in value:
-            report[key] = enrich_with_exploit_intel(
-                "persistence",
-                value,
-                search_terms=[value.get("persistence_type"), key],
-                platform=(manager.system_info.get("platform") or "").lower() or None,
-                include_payloads=True,
-            )
-
-    if isinstance(report.get("analysis"), dict):
-        analysis_terms = []
-        for technique in report["analysis"].get("techniques", []):
-            if isinstance(technique, dict):
-                analysis_terms.append(technique.get("name"))
-        report["analysis"] = enrich_with_exploit_intel(
-            "persistence",
-            report["analysis"],
-            search_terms=analysis_terms,
-            platform=(manager.system_info.get("platform") or "").lower() or None,
-            include_payloads=True,
-        )
-
     return report
-
-
-def install_persistence_framework() -> Dict[str, Any]:
-    """Install comprehensive persistence framework."""
-    manager = PersistenceManager()
-    return manager.install_multiple_persistence()

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
 APT Web Reconnaissance Toolkit
 Advanced web reconnaissance and information gathering

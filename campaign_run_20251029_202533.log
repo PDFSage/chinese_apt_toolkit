@@ -1,0 +1,6 @@
+2025-10-29 20:25:33,455 - real_target_campaign_runner - INFO - Validating targets for defense_contractor
+2025-10-29 20:25:33,455 - real_target_campaign_runner - INFO - Validating domain: test.defense.example.com
+2025-10-29 20:25:33,456 - real_target_campaign_runner - INFO - Validating domain: test.contractor.example.com
+2025-10-29 20:25:33,456 - real_target_campaign_runner - INFO - Validating IP: 10.0.1.10
+2025-10-29 20:25:38,459 - real_target_campaign_runner - INFO - Validating IP: 10.0.1.11
+2025-10-29 20:25:43,462 - real_target_campaign_runner - ERROR - No valid targets found

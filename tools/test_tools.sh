@@ -26,6 +26,27 @@ echo "                    APT Tools Test Script"
 echo "           For Educational and Authorized Testing Only"
 echo -e "${NC}"
 
+if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+    TOOLS=(
+        "apt_recon.sh"
+        "APT-PowerShell-Toolkit.ps1"
+        "apt_persistence.py"
+        "apt_network_scanner"
+        "apt_memory_injector"
+        "apt_web_recon.js"
+        "apt_social_engineering.rb"
+    )
+else
+    TOOLS=(
+        "apt_recon.sh"
+        "APT-PowerShell-Toolkit.ps1"
+        "apt_persistence.py"
+        "apt_network_scanner"
+        "apt_web_recon.js"
+        "apt_social_engineering.rb"
+    )
+fi
+
 # Function to check if command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -57,34 +78,26 @@ run_test() {
 check_tool_availability() {
     echo -e "${BLUE}[*] Checking Tool Availability...${NC}"
     
-    local tools=(
-        "apt_recon.sh"
-        "APT-PowerShell-Toolkit.ps1"
-        "apt_persistence.py"
-        "apt_network_scanner"
-        "apt_memory_injector"
-        "apt_web_recon.js"
-        "apt_social_engineering.rb"
-    )
+    local available_tools=0
+    local total_tools=0
     
-    local available=0
-    local total=${#tools[@]}
-    
-    for tool in "${tools[@]}"; do
+    for tool in "${TOOLS[@]}"; do
+        total_tools=$((total_tools + 1))
         if [ -f "$tool" ]; then
-            if [ -x "$tool" ] || [[ "$tool" == *.ps1 ]] || [[ "$tool" == *.py ]] || [[ "$tool" == *.js ]] || [[ "$tool" == *.rb ]]; then
-                echo -e "${GREEN}[+] Available: $tool${NC}"
-                available=$((available + 1))
-            else
-                echo -e "${YELLOW}[!] Found but not executable: $tool${NC}"
-            fi
+            echo -e "${GREEN}[+] Found: $tool${NC}"
+            available_tools=$((available_tools + 1))
         else
             echo -e "${RED}[-] Missing: $tool${NC}"
         fi
     done
     
-    echo -e "${GREEN}[+] Tool availability: $available/$total tools available${NC}"
-    return $((total - available))
+    echo -e "${GREEN}[+] Tool availability: $available_tools/$total_tools tools available${NC}"
+    
+    if [ "$available_tools" -ne "$total_tools" ]; then
+        return 1
+    fi
+    
+    return 0
 }
 
 # Function to test shell scripts
@@ -304,7 +317,10 @@ run_comprehensive_tests() {
 
 # Main execution
 main() {
-    run_comprehensive_tests
+    (
+        cd tools
+        run_comprehensive_tests
+    )
     
     echo ""
     echo -e "${BLUE}[*] Test script completed${NC}"

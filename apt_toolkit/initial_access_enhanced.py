@@ -275,6 +275,45 @@ class SupplyChainCompromise:
             return f"Skipping activation on {target_info['target_domain']} - Not a government network"
 
 
+def spear_phishing(target_identifier: str, target_role: str = "") -> Dict[str, Any]:
+    """Generate a spear-phishing package for the given target."""
+    social_engineer = AdvancedSocialEngineering()
+
+    if "@" in target_identifier:
+        target_email = target_identifier
+    else:
+        local_part = target_role.lower().replace(" ", ".") if target_role else "target"
+        target_email = f"{local_part}@{target_identifier}"
+
+    dossier = social_engineer.build_target_dossier(target_email)
+    lure = social_engineer.create_context_aware_lure(dossier)
+
+    print(f"[spear_phishing] Crafted lure for {target_email}")
+    print(f"[spear_phishing] Subject: {lure['subject']}")
+
+    return {
+        "target_email": target_email,
+        "dossier": dossier,
+        "lure": lure,
+    }
+
+
+def supply_chain_compromise(target_domain: str, target_ip: str = "0.0.0.0") -> Dict[str, Any]:
+    """Evaluate and execute a simulated supply chain compromise."""
+    supply_chain = SupplyChainCompromise()
+    assessment = supply_chain.malicious_update_check(target_ip=target_ip, target_domain=target_domain)
+    outcome = supply_chain.execute_implant(assessment)
+
+    print(f"[supply_chain_compromise] {outcome}")
+
+    return {
+        "target_domain": target_domain,
+        "target_ip": target_ip,
+        "assessment": assessment,
+        "outcome": outcome,
+    }
+
+
 def analyze_advanced_social_engineering() -> Dict[str, Any]:
     """Analyze advanced social engineering techniques."""
     se = AdvancedSocialEngineering()

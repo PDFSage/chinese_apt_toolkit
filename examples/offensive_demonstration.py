@@ -28,7 +28,6 @@ from apt_toolkit import (
     analyze_advanced_privilege_escalation,
     analyze_advanced_edr_evasion
 )
-from apt_toolkit.security_controls import get_safety_status
 
 
 def demonstrate_offensive_social_engineering():
@@ -168,14 +167,13 @@ def demonstrate_process_injection():
     print("="*60)
     
     injection = AdvancedProcessInjection()
-    techniques = injection.analyze_injection_techniques()
+    techniques = injection.perform_stealthy_injection()
     
     print("\n[+] Process Injection Methods:")
-    for method, details in techniques['injection_methods'].items():
-        print(f"   - {method.replace('_', ' ').title()}:")
-        print(f"     Technique: {details['technique']}")
-        print(f"     Stealth Level: {details['stealth_level']}")
-        print(f"     APT Reference: {details['apt_reference']}")
+    print(f"   - {techniques['injection_technique'].replace('_', ' ').title()}:")
+    print(f"     Technique: {techniques['injection_details']['technique']}")
+    print(f"     Stealth Level: {techniques['injection_details']['stealth_level']}")
+    print(f"     APT Reference: {techniques['injection_details'].get('apt_reference', 'N/A')}")
 
 
 def demonstrate_full_offensive_campaign():
@@ -229,30 +227,9 @@ def demonstrate_exploit_intelligence():
     if report["matched_exploits"]:
         sample = report["matched_exploits"][0]
         print("\n[+] Sample Exploit:")
-        print(f"   - {sample.description} ({sample.type})")
-        if sample.codes:
-            print(f"     Codes: {', '.join(sample.codes)}")
-
-
-def demonstrate_safety_controls():
-    """Demonstrate safety controls and authorization."""
-    print("\n" + "="*60)
-    print("SAFETY CONTROLS AND AUTHORIZATION")
-    print("="*60)
-    
-    safety_status = get_safety_status()
-    
-    print("\n[+] Safety Controller Status:")
-    print(f"   - Safe Mode: {safety_status['safe_mode']}")
-    print(f"   - Authorized: {safety_status['authorized']}")
-    print(f"   - Environment Safe: {safety_status['environment_safe']}")
-    print(f"   - Audit Enabled: {safety_status['audit_enabled']}")
-    
-    print("\n[+] Security Features:")
-    print("   - Authorization required for execution")
-    print("   - Safe mode prevents actual system modifications")
-    print("   - Audit logging for all actions")
-    print("   - Environment safety checks")
+        print(f"   - {sample['description']} ({sample['type']})")
+        if sample['codes']:
+            print(f"     Codes: {', '.join(sample['codes'])}")
 
 
 def main():
@@ -262,7 +239,6 @@ def main():
     print("="*60)
     
     # Demonstrate various offensive techniques
-    demonstrate_safety_controls()
     demonstrate_offensive_social_engineering()
     demonstrate_offensive_persistence()
     demonstrate_adcs_exploitation()

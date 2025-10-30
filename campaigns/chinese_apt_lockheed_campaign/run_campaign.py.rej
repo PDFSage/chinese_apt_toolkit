@@ -1,0 +1,14 @@
+@@ -219,6 +219,10 @@
+     
+     return campaign_results
+ 
++def main():
++    """Main entry point for the campaign"""
++    targets = read_targets()
++    return simulate_campaign(targets)
++
+ if __name__ == "__main__":
+-    targets = read_targets()
+-    simulate_campaign(targets)
++    main()
+\ No newline at end of line

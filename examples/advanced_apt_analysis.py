@@ -193,14 +193,14 @@ def demonstrate_full_campaign():
 
 
 def demonstrate_exploit_intelligence():
-    """Showcase offline ExploitDB enrichment for a well-known product."""
+    """Showcase offline ExploitDB enrichment."""
     print("\n" + "="*60)
     print("EXPLOITDB INTELLIGENCE")
     print("="*60)
 
     try:
         index = ExploitDBIndex()
-    except ExploitDBNotAvailableError as exc:  # pragma: no cover - depends on local snapshot
+    except ExploitDBNotAvailableError as exc:  
         print(f"[!] {exc}")
         return
 
@@ -218,9 +218,9 @@ def demonstrate_exploit_intelligence():
     if report["matched_exploits"]:
         sample = report["matched_exploits"][0]
         print("\n[+] Sample Exploit:")
-        print(f"   - {sample.description} ({sample.type})")
-        if sample.codes:
-            print(f"     Codes: {', '.join(sample.codes)}")
+        print(f"   - {sample['description']} ({sample['type']})")
+        if sample['codes']:
+            print(f"     Codes: {', '.join(sample['codes'])}")
 
 
 def main():
