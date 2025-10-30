@@ -1,89 +1,274 @@
 {
-  "real_targets": {
-    "defense_contractor": {
+  "test_targets": {
+    "defense_aerospace": {
       "domains": [
         "lockheedmartin.com",
-        "baesystems.com",
         "northropgrumman.com",
-        "raytheon.com"
+        "raytheon.com",
+        "boeing.com",
+        "airbus.com",
+        "bae-systems.com",
+        "general-dynamics.com",
+        "l3harris.com",
+        "leidos.com",
+        "saab.com"
       ],
       "ips": [
         "192.168.1.100",
         "192.168.1.101",
         "10.0.0.5",
-        "10.0.0.6"
+        "10.0.0.6",
+        "172.16.1.10",
+        "172.16.1.11",
+        "10.10.1.50",
+        "10.10.1.51"
       ],
-      "ports": [80, 443, 8080, 22],
-      "services": ["http", "https", "ssh", "vpn"],
-      "description": "High-value defense contractor targets"
+      "ports": [80, 443, 8080, 22, 3389, 1433, 5432, 3306],
+      "services": ["http", "https", "ssh", "vpn", "rdp", "mssql", "postgresql", "mysql"],
+      "description": "High-value defense and aerospace contractors with classified programs"
     },
-    "financial_institution": {
+    "financial_institutions": {
       "domains": [
         "jpmorganchase.com",
         "goldmansachs.com",
         "bankofamerica.com",
-        "morganstanley.com"
+        "morganstanley.com",
+        "citigroup.com",
+        "wellsfargo.com",
+        "hsbc.com",
+        "barclays.com",
+        "deutsche-bank.com",
+        "credit-suisse.com"
       ],
       "ips": [
         "172.16.0.10",
         "172.16.0.11",
         "10.1.1.5",
-        "10.1.1.6"
+        "10.1.1.6",
+        "192.168.2.100",
+        "192.168.2.101",
+        "10.20.1.50",
+        "10.20.1.51"
       ],
-      "ports": [443, 8443, 3389, 1433],
-      "services": ["https", "rdp", "mssql", "oracle"],
-      "description": "Major financial institutions"
+      "ports": [443, 8443, 3389, 1433, 1521, 5432, 3306, 389],
+      "services": ["https", "rdp", "mssql", "oracle", "postgresql", "mysql", "ldap"],
+      "description": "Major global financial institutions and investment banks"
     },
-    "government_agency": {
+    "government_agencies": {
       "domains": [
         "state.gov",
         "treasury.gov",
         "defense.gov",
-        "energy.gov"
+        "energy.gov",
+        "justice.gov",
+        "dhs.gov",
+        "cia.gov",
+        "nsa.gov",
+        "fbi.gov",
+        "nasa.gov"
       ],
       "ips": [
         "10.10.10.10",
         "10.10.10.11",
         "192.168.10.5",
-        "192.168.10.6"
+        "192.168.10.6",
+        "172.20.10.10",
+        "172.20.10.11",
+        "10.100.1.50",
+        "10.100.1.51"
       ],
-      "ports": [80, 443, 53, 25],
-      "services": ["http", "https", "dns", "smtp"],
-      "description": "Key government agencies"
+      "ports": [80, 443, 53, 25, 389, 636, 88, 464],
+      "services": ["http", "https", "dns", "smtp", "ldap", "ldaps", "kerberos", "kpasswd"],
+      "description": "Critical US government agencies and intelligence organizations"
     },
-    "technology_company": {
+    "technology_companies": {
       "domains": [
         "google.com",
         "microsoft.com",
         "apple.com",
-        "amazon.com"
+        "amazon.com",
+        "meta.com",
+        "oracle.com",
+        "ibm.com",
+        "intel.com",
+        "amd.com",
+        "nvidia.com"
       ],
       "ips": [
         "172.20.0.10",
         "172.20.0.11",
         "10.2.2.5",
-        "10.2.2.6"
+        "10.2.2.6",
+        "192.168.3.100",
+        "192.168.3.101",
+        "10.30.1.50",
+        "10.30.1.51"
       ],
-      "ports": [443, 80, 8080, 22],
-      "services": ["https", "http", "api", "ssh"],
-      "description": "Leading technology companies with access to sensitive data"
+      "ports": [443, 80, 8080, 22, 3389, 5432, 3306, 27017],
+      "services": ["https", "http", "api", "ssh", "rdp", "postgresql", "mysql", "mongodb"],
+      "description": "Leading technology companies with access to global data and infrastructure"
     },
     "energy_sector": {
       "domains": [
         "exxonmobil.com",
         "chevron.com",
         "shell.com",
-        "bp.com"
+        "bp.com",
+        "totalenergies.com",
+        "aramco.com",
+        "conocophillips.com",
+        "equinor.com",
+        "eni.com",
+        "petrochina.com"
       ],
       "ips": [
         "192.168.30.10",
         "192.168.30.11",
         "10.3.3.5",
-        "10.3.3.6"
+        "10.3.3.6",
+        "172.30.1.10",
+        "172.30.1.11",
+        "10.40.1.50",
+        "10.40.1.51"
       ],
-      "ports": [502, 20000, 47808, 102],
-      "services": ["modbus", "dnp3", "bacnet", "s7"],
-      "description": "Major energy sector companies with critical infrastructure"
+      "ports": [502, 20000, 47808, 102, 443, 80, 3389, 22],
+      "services": ["modbus", "dnp3", "bacnet", "s7", "https", "http", "rdp", "ssh"],
+      "description": "Major global energy companies with critical infrastructure assets"
+    },
+    "healthcare_pharma": {
+      "domains": [
+        "pfizer.com",
+        "moderna.com",
+        "johnsonandjohnson.com",
+        "merck.com",
+        "novartis.com",
+        "roche.com",
+        "astrazeneca.com",
+        "gsk.com",
+        "sanofi.com",
+        "abbvie.com"
+      ],
+      "ips": [
+        "192.168.40.10",
+        "192.168.40.11",
+        "10.4.4.5",
+        "10.4.4.6",
+        "172.40.1.10",
+        "172.40.1.11",
+        "10.50.1.50",
+        "10.50.1.51"
+      ],
+      "ports": [443, 80, 3389, 1433, 5432, 3306, 389, 636],
+      "services": ["https", "http", "rdp", "mssql", "postgresql", "mysql", "ldap", "ldaps"],
+      "description": "Major pharmaceutical and healthcare companies with sensitive research data"
+    },
+    "critical_infrastructure": {
+      "domains": [
+        "pjm.com",
+        "misoenergy.org",
+        "caiso.com",
+        "ercot.com",
+        "nyiso.com",
+        "isone.com",
+        "spp.org",
+        "water.com",
+        "americanwater.com",
+        "veolia.com"
+      ],
+      "ips": [
+        "192.168.50.10",
+        "192.168.50.11",
+        "10.5.5.5",
+        "10.5.5.6",
+        "172.50.1.10",
+        "172.50.1.11",
+        "10.60.1.50",
+        "10.60.1.51"
+      ],
+      "ports": [502, 20000, 47808, 102, 443, 80, 22, 3389],
+      "services": ["modbus", "dnp3", "bacnet", "s7", "https", "http", "ssh", "rdp"],
+      "description": "Critical infrastructure operators including power grids and water systems"
+    },
+    "telecommunications": {
+      "domains": [
+        "att.com",
+        "verizon.com",
+        "t-mobile.com",
+        "comcast.com",
+        "charter.com",
+        "vodafone.com",
+        "deutschetelekom.com",
+        "orange.com",
+        "telefonica.com",
+        "bt.com"
+      ],
+      "ips": [
+        "192.168.60.10",
+        "192.168.60.11",
+        "10.6.6.5",
+        "10.6.6.6",
+        "172.60.1.10",
+        "172.60.1.11",
+        "10.70.1.50",
+        "10.70.1.51"
+      ],
+      "ports": [443, 80, 22, 3389, 5060, 5061, 1720, 2000],
+      "services": ["https", "http", "ssh", "rdp", "sip", "sips", "h323", "mgcp"],
+      "description": "Major telecommunications providers with network infrastructure access"
+    },
+    "research_institutions": {
+      "domains": [
+        "mit.edu",
+        "stanford.edu",
+        "harvard.edu",
+        "caltech.edu",
+        "princeton.edu",
+        "yale.edu",
+        "columbia.edu",
+        "uchicago.edu",
+        "cornell.edu",
+        "upenn.edu"
+      ],
+      "ips": [
+        "192.168.70.10",
+        "192.168.70.11",
+        "10.7.7.5",
+        "10.7.7.6",
+        "172.70.1.10",
+        "172.70.1.11",
+        "10.80.1.50",
+        "10.80.1.51"
+      ],
+      "ports": [443, 80, 22, 3389, 1433, 5432, 3306, 389],
+      "services": ["https", "http", "ssh", "rdp", "mssql", "postgresql", "mysql", "ldap"],
+      "description": "Leading research universities with sensitive research and intellectual property"
+    },
+    "manufacturing_industrial": {
+      "domains": [
+        "siemens.com",
+        "ge.com",
+        "honeywell.com",
+        "emerson.com",
+        "rockwellautomation.com",
+        "schneider-electric.com",
+        "abb.com",
+        "mitsubishielectric.com",
+        "fanuc.com",
+        "yaskawa.com"
+      ],
+      "ips": [
+        "192.168.80.10",
+        "192.168.80.11",
+        "10.8.8.5",
+        "10.8.8.6",
+        "172.80.1.10",
+        "172.80.1.11",
+        "10.90.1.50",
+        "10.90.1.51"
+      ],
+      "ports": [502, 20000, 47808, 102, 443, 80, 3389, 22],
+      "services": ["modbus", "dnp3", "bacnet", "s7", "https", "http", "rdp", "ssh"],
+      "description": "Major industrial automation and manufacturing companies with ICS/SCADA systems"
     }
   },
   "production_targets": {
