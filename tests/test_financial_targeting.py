@@ -24,7 +24,9 @@ class TestFinancialTargetingEngine(unittest.TestCase):
         
         # Check that all expected institution types are present
         expected_types = ["banks", "investment_firms", "payment_processors", 
-                         "cryptocurrency_exchanges", "regulatory_bodies"]
+                         "cryptocurrency_exchanges", "regulatory_bodies",
+                         "insurance_companies", "fintech_companies",
+                         "wealth_management", "mortgage_lenders"]
         for inst_type in expected_types:
             self.assertIn(inst_type, self.engine.financial_institutions)
     
@@ -35,6 +37,10 @@ class TestFinancialTargetingEngine(unittest.TestCase):
         self.assertEqual(self.engine._get_institution_type("visa.com"), "payment_processors")
         self.assertEqual(self.engine._get_institution_type("coinbase.com"), "cryptocurrency_exchanges")
         self.assertEqual(self.engine._get_institution_type("federalreserve.gov"), "regulatory_bodies")
+        self.assertEqual(self.engine._get_institution_type("aig.com"), "insurance_companies")
+        self.assertEqual(self.engine._get_institution_type("robinhood.com"), "fintech_companies")
+        self.assertEqual(self.engine._get_institution_type("northwesternmutual.com"), "wealth_management")
+        self.assertEqual(self.engine._get_institution_type("quickenloans.com"), "mortgage_lenders")
         self.assertEqual(self.engine._get_institution_type("unknown.com"), "banks")  # default
     
     def test_generate_financial_domain(self):
@@ -67,6 +73,11 @@ class TestFinancialTargetingEngine(unittest.TestCase):
         crypto_value = self.engine._estimate_target_value("cryptocurrency_exchanges")
         self.assertGreaterEqual(crypto_value["estimated_value"], 10000000)
         self.assertLessEqual(crypto_value["estimated_value"], 200000000)
+        
+        # Test new institution types
+        fintech_value = self.engine._estimate_target_value("fintech_companies")
+        self.assertGreaterEqual(fintech_value["estimated_value"], 3000000)
+        self.assertLessEqual(fintech_value["estimated_value"], 80000000)
     
     def test_categorize_value(self):
         """Test value categorization."""

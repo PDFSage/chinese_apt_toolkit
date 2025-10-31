@@ -20,35 +20,70 @@ class FinancialTargetingEngine:
         
         self.social_engineering = AdvancedSocialEngineering()
         
-        # Major financial institutions
+        # Global financial institutions
         self.financial_institutions = {
             "banks": [
+                # US Banks
                 "jpmorganchase.com", "bankofamerica.com", "wellsfargo.com",
-                "citigroup.com", "goldmansachs.com", "morganstanley.com"
+                "citigroup.com", "goldmansachs.com", "morganstanley.com",
+                "usbank.com", "pnc.com", "tdbank.com", "capitalone.com",
+                # European Banks
+                "hsbc.com", "barclays.com", "deutsche-bank.de", "bnpparibas.com",
+                "societegenerale.com", "credit-suisse.com", "ubs.com", "santander.com",
+                # Asian Banks
+                "mufg.jp", "mizuho.co.jp", "smfg.co.jp", "icbc.com.cn",
+                "ccb.com", "abc.com.cn", "boc.cn", "dbs.com", "standardchartered.com",
+                # Other Global
+                "scotiabank.com", "royalbank.com", "commonwealthbank.com.au"
             ],
             "investment_firms": [
-                "blackrock.com", "vanguard.com", "fidelity.com",
-                "schwab.com"
+                "blackrock.com", "vanguard.com", "fidelity.com", "schwab.com",
+                "pimco.com", "federatedinvestors.com", "troweprice.com", "invesco.com"
             ],
             "payment_processors": [
                 "visa.com", "mastercard.com", "americanexpress.com",
-                "paypal.com", "stripe.com"
+                "paypal.com", "stripe.com", "squareup.com", "adyen.com",
+                "worldpay.com", "fiserv.com", "fisglobal.com"
             ],
             "cryptocurrency_exchanges": [
-                "coinbase.com", "binance.com", "kraken.com"
+                "coinbase.com", "binance.com", "kraken.com", "bitfinex.com",
+                "huobi.com", "okex.com", "bittrex.com", "gemini.com",
+                "bitstamp.net", "poloniex.com"
             ],
             "regulatory_bodies": [
-                "federalreserve.gov", "sec.gov", "fdic.gov"
+                "federalreserve.gov", "sec.gov", "fdic.gov", "occ.treas.gov",
+                "finra.org", "cftc.gov", "bis.org", "fsb.org",
+                "ecb.europa.eu", "bankofengland.co.uk", "boj.or.jp"
+            ],
+            "insurance_companies": [
+                "aig.com", "metlife.com", "prudential.com", "newyorklife.com",
+                "statefarm.com", "allstate.com", "libertymutual.com", "nationwide.com"
+            ],
+            "fintech_companies": [
+                "robinhood.com", "sofi.com", "chime.com", "revolut.com",
+                "transferwise.com", "monzo.com", "n26.com", "plaid.com"
+            ],
+            "wealth_management": [
+                "northwesternmutual.com", "raymondjames.com", "edwardjones.com",
+                "lpl.com", "ameriprise.com", "lincolnfinancial.com"
+            ],
+            "mortgage_lenders": [
+                "quickenloans.com", "loanDepot.com", "fairwaymc.com",
+                "caliberhomeloans.com", "guaranteedrate.com"
             ]
         }
         
         # Financial job titles
         self.job_titles = {
-            "banks": ["Vice President", "Senior Director", "Managing Director"],
-            "investment_firms": ["Portfolio Manager", "Investment Director"],
-            "payment_processors": ["Security Director", "Fraud Prevention Manager"],
-            "cryptocurrency_exchanges": ["Security Engineer", "Risk Manager"],
-            "regulatory_bodies": ["Examiner", "Compliance Director"]
+            "banks": ["Vice President", "Senior Director", "Managing Director", "Chief Risk Officer"],
+            "investment_firms": ["Portfolio Manager", "Investment Director", "Chief Investment Officer"],
+            "payment_processors": ["Security Director", "Fraud Prevention Manager", "Chief Compliance Officer"],
+            "cryptocurrency_exchanges": ["Security Engineer", "Risk Manager", "Chief Technology Officer"],
+            "regulatory_bodies": ["Examiner", "Compliance Director", "Senior Analyst"],
+            "insurance_companies": ["Underwriting Director", "Claims Manager", "Actuarial Director"],
+            "fintech_companies": ["Product Manager", "Engineering Lead", "Security Architect"],
+            "wealth_management": ["Wealth Advisor", "Portfolio Manager", "Financial Planner"],
+            "mortgage_lenders": ["Underwriting Manager", "Loan Officer", "Risk Analyst"]
         }
 
     def _get_institution_type(self, domain: str) -> str:
@@ -63,11 +98,15 @@ class FinancialTargetingEngine:
         inst_type = self._get_institution_type(base_domain)
         
         subdomains = {
-            "banks": ["secure", "online", "internal", "corporate", "banking"],
+            "banks": ["secure", "online", "internal", "corporate", "banking", "mobile"],
             "investment_firms": ["secure", "trading", "internal", "research", "compliance"],
             "payment_processors": ["secure", "api", "internal", "processing", "gateway"],
             "cryptocurrency_exchanges": ["secure", "trading", "api", "internal", "wallet"],
-            "regulatory_bodies": ["secure", "internal", "compliance", "reporting", "data"]
+            "regulatory_bodies": ["secure", "internal", "compliance", "reporting", "data"],
+            "insurance_companies": ["secure", "claims", "internal", "underwriting"],
+            "fintech_companies": ["api", "secure", "internal", "mobile", "web"],
+            "wealth_management": ["secure", "client", "internal", "portfolio"],
+            "mortgage_lenders": ["secure", "loan", "internal", "underwriting"]
         }
         
         subdomain = random.choice(subdomains[inst_type])
@@ -97,7 +136,11 @@ class FinancialTargetingEngine:
             "investment_firms": {"low": 5000000, "high": 100000000},
             "payment_processors": {"low": 2000000, "high": 75000000},
             "cryptocurrency_exchanges": {"low": 10000000, "high": 200000000},
-            "regulatory_bodies": {"low": 500000, "high": 10000000}
+            "regulatory_bodies": {"low": 500000, "high": 10000000},
+            "insurance_companies": {"low": 1500000, "high": 40000000},
+            "fintech_companies": {"low": 3000000, "high": 80000000},
+            "wealth_management": {"low": 2000000, "high": 60000000},
+            "mortgage_lenders": {"low": 1000000, "high": 30000000}
         }
         
         value_range = value_ranges.get(inst_type, value_ranges["banks"])
@@ -140,7 +183,11 @@ class FinancialTargetingEngine:
             "investment_firms": 9,
             "payment_processors": 7,
             "cryptocurrency_exchanges": 10,
-            "regulatory_bodies": 6
+            "regulatory_bodies": 6,
+            "insurance_companies": 7,
+            "fintech_companies": 8,
+            "wealth_management": 8,
+            "mortgage_lenders": 6
         }
         
         total_risk = sum(risk_factors[inst_type] * count 
@@ -180,6 +227,10 @@ class FinancialTargetingEngine:
             return "Target algorithmic trading systems and portfolio management platforms"
         elif inst_distribution.get("banks", 0) > 0:
             return "Focus on SWIFT manipulation and account takeover attacks"
+        elif inst_distribution.get("fintech_companies", 0) > 0:
+            return "Exploit API vulnerabilities and mobile application security gaps"
+        elif inst_distribution.get("payment_processors", 0) > 0:
+            return "Intercept payment transactions and exploit processing systems"
         else:
             return "Standard financial targeting approach with emphasis on transaction systems"
 
@@ -215,7 +266,9 @@ class FinancialTargetingEngine:
                 "Cryptocurrency transfers",
                 "Offshore banking",
                 "Shell companies",
-                "Digital asset conversion"
+                "Digital asset conversion",
+                "Cross-border wire transfers",
+                "Trade-based money laundering"
             ]
         }
 
